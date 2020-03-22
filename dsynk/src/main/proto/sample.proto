@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.csrg.dsync.sample";
+
+package com.csrg.dsync.sample;
+
+service SampleTestServer {
+
+    rpc GetState(StateId) returns (State) {}
+
+    rpc GetEvents(StateId) returns (stream Event) {}
+
+//    rpc RecordRoute(stream Point) returns (RouteSummary) {}
+
+}
+
+
+message StateId {
+    int32 id = 1;
+}
+
+message State {
+    string text = 1;
+}
+
+message Event {
+    string event_type = 1;
+    string data = 2;
+}
