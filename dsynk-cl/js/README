@@ -1,0 +1,5 @@
+# For development
+npm run deploy
+
+# For release
+npm run build
