@@ -1,4 +1,4 @@
-package com.csrg.dsynk.sample;
+package com.csrg.dsynk.hub.sample;
 
 import com.csrg.dsync.sample.Event;
 import com.csrg.dsync.sample.SampleTestServerGrpc;

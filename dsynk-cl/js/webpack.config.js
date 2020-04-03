@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/relay.js',
+  entry: './src/dsynk.js',
   output: {
     filename: 'dsynk.js',
     path: path.resolve(__dirname, 'dist'),

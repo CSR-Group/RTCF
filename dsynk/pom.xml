@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.csrg</groupId>
-    <artifactId>dsynk</artifactId>
+    <artifactId>dsynk-hub</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -14,23 +14,40 @@
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
 
-    <!--    Todo: Update the dependencies -->
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+
+        <!--    Todo: Update the grpc-netty-shaded dependency -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
             <version>1.28.0</version>
         </dependency>
+        <!--    Todo: Update the grpc-protobuf dependency -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
             <version>1.28.0</version>
         </dependency>
+        <!--    Todo: Update the grpc-stub dependency -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
             <version>1.28.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

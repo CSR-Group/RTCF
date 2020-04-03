@@ -1,4 +1,4 @@
-package com.csrg.dsynk.sample;
+package com.csrg.dsynk.hub.sample;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
