@@ -1,5 +1,6 @@
 package com.csrg.dsynk.manager.services.session;
 
+import com.csrg.dsynk.manager.services.hub.HubService;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ public class SessionService {
 
     private static final String TOPIC_PREFIX = "/topic/";
     private Map<String, Session> sessionMap;
+    private HubService hubService;
 
     public SessionService() {
 
@@ -25,7 +27,7 @@ public class SessionService {
             throw new RuntimeException("Duplicate Session Id Created");
         }
 
-        Session session = new Session(id, TOPIC_PREFIX + id);
+        Session session = new Session(id, TOPIC_PREFIX + id,hubService.assignHub());
         sessionMap.put(id, session);
         return session;
     }
