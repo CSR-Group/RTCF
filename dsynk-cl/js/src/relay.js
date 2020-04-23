@@ -1,6 +1,6 @@
 import { Client, Message } from '@stomp/stompjs';
 
-var dsynkHubUrl = "ws://127.0.0.1:8082"
+var dsynkHubUrl = "ws://127.0.0.1:8080"
 
 const client = new Client();
 client.brokerURL = dsynkHubUrl + "/session";
