@@ -1,6 +1,7 @@
 import { subscribe, publish } from "./relay";
 
 var idToTopicMap = {};
+var clientID = "ABC";  //todo: create unique 
 
 async function createSession(hostAddress) {
     var requestOptions = {
@@ -40,9 +41,9 @@ async function sendEvent(sessionId, event) {
     try {
         if(!(sessionId in idToTopicMap)) {
             const sesssionInfo = await getSession(sessionId);
-            publish(sesssionInfo.topic, event);
+            publish(sesssionInfo.topic, clientID, event);
         } else {
-            publish(idToTopicMap[sessionId], event);
+            publish(idToTopicMap[sessionId], clientID, event);
         }
     } catch(error) {
         throw(error);
