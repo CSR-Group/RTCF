@@ -35,15 +35,19 @@ function subscribe(topic, handler) {
     }
 }
 
-function publish(topic, message) {
+function publish(topic, from, message) {
+    var eventMessage = JSON.stringify({'topic' : topic, 
+                                       'from' : from,
+                                       'message': message });
+    console.log("sending event : " + eventMessage);
     if(!client.connected) {
         var onConnect = function() {
-            client.publish({destination: topic, body: message});
+            client.publish({destination: "/event/trigger", body: eventMessage});
         }
         connect(onConnect);
     }
     else {
-        client.publish({destination: topic, body: message});
+        client.publish({destination: "/event/trigger", body: eventMessage});
     }
 }
 
