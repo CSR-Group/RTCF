@@ -24,7 +24,7 @@ public class EventDelegator {
     }
 
     public void delegate(String topic,
-                         String message,
+                         requestMessage message,
                          String from) {
 
         executorServiceMap.computeIfAbsent(topic, k -> Executors.newSingleThreadExecutor());

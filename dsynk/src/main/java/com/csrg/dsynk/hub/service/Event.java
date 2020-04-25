@@ -8,5 +8,5 @@ import lombok.Data;
 public class Event {
 
     String from;
-    String message;
+    requestMessage message;
 }
