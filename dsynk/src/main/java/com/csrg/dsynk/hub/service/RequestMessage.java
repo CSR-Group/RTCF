@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Event {
-
-    String from;
-    RequestMessage message;
+public class RequestMessage
+{
+    DataType type;
+    String key;
+    String value;
+    Integer line;
 }

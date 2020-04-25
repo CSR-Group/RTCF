@@ -6,41 +6,46 @@ import java.util.TreeMap;
 
 public class State {
 
-    Map<String, Integer> integerMap;
-    Map<String, String> stringMap;
-    Map<String, TreeMap<Integer,String>> docMap;
+    private Map<String, Integer> integerMap = new HashMap<>();
+    private Map<String, String> stringMap = new HashMap<>();
+    private Map<String, TreeMap<Integer,String>> docMap = new HashMap<>();
 
-    public void handleEvent(String from, requestMessage message)
+    public void intialize(String from, StateDefinition definition) {
+
+        for(Variable variable : definition.getVariables()) {
+
+            if(DataType.int64.equals(variable.type)) {
+                integerMap.put(variable.name, Integer.parseInt(variable.value));
+            }
+            else if (DataType.str.equals(variable.type)) {
+                stringMap.put(variable.name, variable.value);
+            }
+            else if(DataType.doc.equals(variable.type)) {
+                docMap.put(variable.name, new TreeMap<>());
+                docMap.get(variable.name).put(0, variable.value);
+            }
+        }
+    }
+
+    public void handleEvent(String from, RequestMessage message)
     {
-        if(message.type == "doc")
+        if(DataType.doc.equals(message.type))
         {
-            docMap.putIfAbsent(message.docId, new TreeMap<Integer, String>());
-            if(message.value == "\\n")
-            {
-                TreeMap<Integer,String> doc = docMap.get(message.docId);
-                Integer line = Integer.parseInt(message.key);
-                if(doc.higherEntry(line) == null)
-                {
-                    docMap.get(message.docId).putIfAbsent(line + 1 ,message.value);
-                }
-                else
-                {
-                    Integer key = line + doc.higherEntry(line).getKey()/2;
-                    docMap.get(message.docId).putIfAbsent(key,message.value);
-                }
-            }
-            else
-            {
-                docMap.get(message.docId).putIfAbsent(Integer.parseInt(message.key),message.value);
-            }
+            handleDocumentChange(message);
         }
-        else if(message.type == "string")
+        else if(DataType.str.equals(message.type))
         {
-            stringMap.putIfAbsent(message.key, message.value);
+            stringMap.put(message.key, message.value);
         }
-        else if(message.type == "int")
+        else if(DataType.int64.equals(message.type))
         {
-            integerMap.putIfAbsent(message.key, Integer.parseInt(message.value));
+            integerMap.put(message.key, Integer.parseInt(message.value));
         }
+    }
+
+    private void handleDocumentChange(RequestMessage message) {
+
+        docMap.putIfAbsent(message.key, new TreeMap<>());
+        docMap.get(message.key).put(message.line,message.value);
     }
 }

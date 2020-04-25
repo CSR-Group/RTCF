@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Event {
+public class Variable {
 
-    String from;
-    RequestMessage message;
+    String name;
+    DataType type;
+    String value;
 }

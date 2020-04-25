@@ -1,5 +1,6 @@
 package com.csrg.dsynk.hub.controllers.v1;
 
+import com.csrg.dsynk.hub.controllers.v1.models.CreateStateDto;
 import com.csrg.dsynk.hub.controllers.v1.models.EventDto;
 import com.csrg.dsynk.hub.service.EventDelegator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,23 @@ public class EventController {
         this.delegator = delegator;
     }
 
+    @MessageMapping("/create")
+    public void createState(CreateStateDto createStateDto) {
 
-    @MessageMapping("/trigger")
-    public void triggerEvent(EventDto eventDto) throws Exception {
+        delegator.initialize(createStateDto.getTopic(),
+                             createStateDto.getFrom(),
+                             createStateDto.asStateDefinition());
+    }
+
+    @MessageMapping("/event")
+    public void triggerEvent(EventDto eventDto)  {
         logger.info("Event received for topic : " + eventDto.getTopic()
                 + " from : " + eventDto.getFrom()
                 + " with message : " + eventDto.getMessage());
 
-        delegator.delegate(eventDto.getTopic(), eventDto.getMessage(), eventDto.getFrom());
+        delegator.delegateEvent(eventDto.getTopic(),
+                                eventDto.getMessage().asRequestMessage(),
+                                eventDto.getFrom());
     }
 
 }

@@ -23,9 +23,21 @@ public class EventDelegator {
         this.stateMap = new HashMap<>();
     }
 
-    public void delegate(String topic,
-                         requestMessage message,
-                         String from) {
+    public void initialize(String topic,
+                           String from,
+                           StateDefinition definition) {
+
+        executorServiceMap.computeIfAbsent(topic, k -> Executors.newSingleThreadExecutor());
+        executorServiceMap.get(topic).submit(() -> {
+            stateMap.computeIfAbsent(topic, k -> new State());
+            stateMap.get(topic).intialize(from, definition);
+        });
+
+    }
+
+    public void delegateEvent(String topic,
+                              RequestMessage message,
+                              String from) {
 
         executorServiceMap.computeIfAbsent(topic, k -> Executors.newSingleThreadExecutor());
         executorServiceMap.get(topic).submit(() -> {
