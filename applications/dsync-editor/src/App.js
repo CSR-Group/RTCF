@@ -13,7 +13,7 @@ class App extends React.Component {
 
   createNewSession() {
 
-    console.log("Creating new seesion");
+    console.log("Creating new session");
 
     createSession("127.0.0.1:9090")
     .then(sessionInfo => {

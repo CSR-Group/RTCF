@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class VariableDefinition {
 
-    String name;
     DataType type;
     String value;
 }
