@@ -36,7 +36,7 @@ class State  {
               this.typeMap[name] = DataType.str;
           }
           if(definition[name].type === DataType.doc) {
-              this.docVars[name] = definition[name].value; 
+              this.docVars[name] = { "0" : definition[name].value }; 
               this.typeMap[name] = DataType.doc;
           }
       }
@@ -63,6 +63,7 @@ class State  {
                   'value': value}
     }
     if(type === DataType.doc) {
+      this.docVars[variableName][docKey] = value;
       message = { 'type': DataType[type],
                   'key': variableName,
                   'line': docKey,
@@ -85,12 +86,13 @@ class State  {
       return this.strVars[variableName];
     }
     if(type === DataType.doc) {
-      return this.docVars[name];
+      return this.docVars[variableName];
     }
   }
 
   handle(message) {
 
+    console.log(message);
     const event = JSON.parse(message.body);
 
     if(event.from === this.clientID) {
@@ -115,8 +117,9 @@ class State  {
       this.strVars[change.key] = change.value;
     }
     if(type === DataType.doc) {
-      console.log("change state : " + change.key + " - "+ change.value);
-      this.docVars[change.key] = change.value;
+      console.log("change state : " + change.key + " - "+ change.line + " - "+ change.value);
+      
+      this.docVars[change.key][change.line] = change.value;
     }
 
   }
