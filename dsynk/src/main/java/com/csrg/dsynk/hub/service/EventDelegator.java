@@ -47,4 +47,8 @@ public class EventDelegator {
         });
     }
 
+    public State getState(String topic) {
+
+        return stateMap.get(topic);
+    }
 }

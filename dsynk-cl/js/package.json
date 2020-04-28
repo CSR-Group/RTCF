@@ -1,8 +1,8 @@
 {
-  "name": "dsynk.js",
+  "name": "dsynk",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/dsynk.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "webpack --mode development --watch",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^5.4.4",
-    "sockjs-client": "^1.4.0"
+    "sockjs-client": "^1.4.0",
+    "uuid": "^7.0.3"
   }
 }
