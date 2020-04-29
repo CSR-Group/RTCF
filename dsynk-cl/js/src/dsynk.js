@@ -23,12 +23,12 @@ async function createSession(hostAddress) {
     }
 }
 
-async function createReplicatedObject(hostAddress, definition) {
+async function createReplicatedObject(hostAddress, definition, onChangeCallback) {
     
     var sessionInfo = await createSession(hostAddress);
 
     var dsynkHubHost = sessionInfo.hub.ip + ":" + sessionInfo.hub.port;
-    var state = new State(definition, clientID, sessionInfo.topic, dsynkHubHost);
+    var state = new State(definition, clientID, sessionInfo.topic, dsynkHubHost, onChangeCallback);
     var topic = sessionInfo.topic;
 
     initializeState(dsynkHubHost, topic, clientID, 
@@ -69,7 +69,7 @@ async function sendEvent(sessionId, event, hostAddress) {
     }
 }
 
-async function getReplicatedObject(hostAddress, sessionId) {
+async function getReplicatedObject(hostAddress, sessionId,onChangeCallback) {
     var sessionInfo;
     if(!(sessionId in idToSessionMap)) {
         sessionInfo = await getSession(hostAddress, sessionId);
@@ -77,7 +77,7 @@ async function getReplicatedObject(hostAddress, sessionId) {
         sessionInfo = idToSessionMap[sessionId];
     }
     var dsynkHubHost = sessionInfo.hub.ip + ":" + sessionInfo.hub.port;
-    var state = new State({},clientID, sessionInfo.topic, dsynkHubHost); 
+    var state = new State({},clientID, sessionInfo.topic, dsynkHubHost,onChangeCallback); 
     sessionToStateMap[sessionInfo.id] = state;
     getState(dsynkHubHost,"/topic/client/"+clientID, (message) => state.buildState(message), 
                             sessionInfo.topic, (message) => state.handle(message), 

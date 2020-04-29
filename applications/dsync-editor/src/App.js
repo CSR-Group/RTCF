@@ -2,27 +2,49 @@ import React from 'react';
 import './App.css';
 import MainPage from './component/MainPage.js'
 import { Button, Grid, Input, Segment, Header, Icon } from 'semantic-ui-react'
-import {createSession} from 'dsynk';
+import {createReplicatedObject, getReplicatedObject} from 'dsynk';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {};
+    this.sessionId = ""; 
+  }
+
+
+  handleStateChange(app) {
+    app.setState(state => ({
+      'object': state.object,
+      'sessionid' : this.sessionId 
+    }));  
   }
 
   createNewSession() {
 
     console.log("Creating new session");
 
-    createSession("127.0.0.1:9090")
-    .then(sessionInfo => {
-        console.log("Got session ",sessionInfo);
-        this.setState(state => ({
-          'id': sessionInfo.id,
-          'topic': sessionInfo.topic
-        }));
-        console.log("Sesssion created");
+    createReplicatedObject("127.0.0.1:9090",          
+    {
+        "document": {"type": "str", "value":"Hello world"}, 
+        "textarea": {"type": "doc", "value":"Hello world 2"}
+    }, () => this.handleStateChange(this))
+    .then(session => {
+      this.setState(state => ({
+        'object': session[0],
+        'sessionid' : session[1] 
+      }));
+      console.log("Replicated Object Created" + session);
+    }); 
+  }
+
+  joinSession() {
+    getReplicatedObject("127.0.0.1:9090", this.sessionId, () => this.handleStateChange(this))
+    .then(session => {
+      this.setState(state => ({
+        'object': session,
+        'sessionid' : this.sessionId 
+      }));
     });
   }
 
@@ -30,7 +52,7 @@ class App extends React.Component {
 
     console.log("render called on app");
 
-    if(this.state.id == undefined) {
+    if(this.state.sessionid == undefined) {
       return (
         <div className="App">
           <div className="App-header">
@@ -49,7 +71,10 @@ class App extends React.Component {
                       </Grid.Row>
                       <Grid.Row>
                         <Segment inverted>
-                          <Input inverted action='Join' placeholder='Session id...' />
+                          <Input inverted 
+                                 action={{ content: 'Join',  onClick: () => this.joinSession()}} 
+                                 placeholder='Session id...' 
+                                 onChange={e => this.sessionId = e.target.value }/>
                         </Segment>
                       </Grid.Row>
                     </Grid>

@@ -16,7 +16,7 @@ class State  {
           }
    */
 
-  constructor(definition, clientID, topic, dsynkHubHost) {
+  constructor(definition, clientID, topic, dsynkHubHost, callback) {
 
       this.intVars = {};
       this.strVars = {}; 
@@ -25,6 +25,7 @@ class State  {
       this.clientID = clientID;
       this.topic = topic;
       this.dsynkHubHost = dsynkHubHost;
+      this.callback = callback; 
 
       for(var name in definition) {
           if(definition[name].type === DataType.int64) {
@@ -122,6 +123,7 @@ class State  {
       this.docVars[change.key][change.line] = change.value;
     }
 
+    this.callback(); 
   }
 
   buildState(message) {
@@ -152,6 +154,7 @@ class State  {
     }
 
     console.log(this);
+    this.callback(); 
   }
 
 }
