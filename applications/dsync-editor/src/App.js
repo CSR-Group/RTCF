@@ -24,7 +24,7 @@ class App extends React.Component {
 
     console.log("Creating new session");
 
-    createReplicatedObject("127.0.0.1:9090",          
+    createReplicatedObject("dsynk.io:9090",          
     {
         "document": {"type": "str", "value":"Hello world"}, 
         "textarea": {"type": "doc", "value":"Hello world 2"}
@@ -39,7 +39,7 @@ class App extends React.Component {
   }
 
   joinSession() {
-    getReplicatedObject("127.0.0.1:9090", this.sessionId, () => this.handleStateChange(this))
+    getReplicatedObject("dsynk.io:9090", this.sessionId, () => this.handleStateChange(this))
     .then(session => {
       this.setState(state => ({
         'object': session,
