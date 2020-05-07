@@ -37,10 +37,28 @@ class State  {
               this.typeMap[name] = DataType.str;
           }
           if(definition[name].type === DataType.doc) {
-              this.docVars[name] = { "0" : definition[name].value }; 
+              this.docVars[name] = { "0.00000" : definition[name].value }; 
               this.typeMap[name] = DataType.doc;
           }
       }
+  }
+
+  del(variableName, docKey) {
+    
+    var message; 
+    if(!(variableName in this.typeMap)) {
+      throw "variable " + variableName + " does not exist"; 
+    }
+    docKey = docKey.toFixed(5)
+    var type = this.typeMap[variableName];
+    if(variableName in this.docVars) {
+      delete this.docVars[variableName][docKey];
+      message = { 'type': DataType[type],
+                  'key': variableName,
+                  'line': docKey,
+                  'delValue': "DELETE"}  
+    }
+    publish(this.dsynkHubHost, this.topic, this.clientID, message);
   }
 
   set(variableName, value = '0', docKey = -1) {
@@ -50,6 +68,7 @@ class State  {
 
     var type = this.typeMap[variableName];
     var message; 
+    docKey = docKey.toFixed(5)
 
     if(type === DataType.int64) {
       this.intVars[variableName] = value;
@@ -93,7 +112,7 @@ class State  {
 
   handle(message) {
 
-    console.log(message);
+    console.log("handle change:",message);
     const event = JSON.parse(message.body);
 
     if(event.from === this.clientID) {
@@ -118,9 +137,17 @@ class State  {
       this.strVars[change.key] = change.value;
     }
     if(type === DataType.doc) {
-      console.log("change state : " + change.key + " - "+ change.line + " - "+ change.value);
-      
-      this.docVars[change.key][change.line] = change.value;
+      console.log(change.line);
+      console.log(this.docVars[change.key]);
+      var docKey = parseFloat(change.line).toFixed(5)
+      if(change.delValue == undefined) {
+        console.log("change state : " + change.key + " - "+ docKey + " - "+ change.value);
+        this.docVars[change.key][docKey] = change.value;  
+      } else {
+        console.log("change state : " + change.key + " - delete ("+ docKey + ")");
+        console.log("deleting", this.docVars[change.key][docKey]);
+        delete this.docVars[change.key][docKey];
+      }
     }
 
     this.callback(); 
@@ -147,7 +174,13 @@ class State  {
     }
     for(var name in parsedState.docs) {
       if(!(name in this.typeMap)) {
-        this.docVars[name] = parsedState.docs[name]; 
+
+        var doc = {}
+        for(var key in parsedState.docs[name]) {
+          doc[parseFloat(key).toFixed(5)] = parsedState.docs[name][key];
+        }
+
+        this.docVars[name] = doc; 
         this.typeMap[name] = DataType.doc;
         console.log("building state doc: " + name + " = " + parsedState.docs[name]);
       }

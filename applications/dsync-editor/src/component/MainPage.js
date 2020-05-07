@@ -65,8 +65,6 @@ class MainPage extends React.Component {
 
     handleEditorChange({html, text}) {
         // console.log('handleEditorChange', html, text);
-        this.state.object.set("document", text);
-
         var previousState = this.state.object.get("textarea"); 
         var currentState = text.split("\n"); 
 
@@ -91,17 +89,17 @@ class MainPage extends React.Component {
             
                 // new line in between two old lines
                 if(this.isNewInBetweenLine(currentState, previousState, prevLineKeys, prevIndex, i)) {
-                    this.state.object.set("textarea",currentState[i],(prevLineKeys[prevIndex-1] + prevLineKeys[prevIndex])/2.0);
+                    this.state.object.set("textarea",currentState[i],(parseFloat(prevLineKeys[prevIndex-1]) + parseFloat(prevLineKeys[prevIndex]))/2.0);
                     console.log("new inbetween line detected");
                 } 
                 // line deleted 
                 else if(prevIndex+1 < prevLineKeys.length && currLine === previousState[prevLineKeys[prevIndex+1]]) {
-                    //to do 
+                    this.state.object.del("textarea", parseFloat(prevLineKeys[prevIndex]));
                     console.log("delete inbetween line detected");
                     prevIndex+=2; 
                 } else {
                     console.log("line change detected");
-                    this.state.object.set("textarea",currLine,prevLineKeys[prevIndex]);
+                    this.state.object.set("textarea",currLine,parseFloat(prevLineKeys[prevIndex]));
                     prevIndex++; 
                 }
             } else {
@@ -109,9 +107,12 @@ class MainPage extends React.Component {
             }
         }
 
+        var lastKey = parseFloat(prevLineKeys[prevLineKeys.length-1])
         while(i < currentState.length) {
             console.log("new line detected");
-            this.state.object.set("textarea",currentState[i],i++);
+            this.state.object.set("textarea",currentState[i],lastKey + 1);
+            lastKey +=1;
+            i++;
         }
 
         // var prevState = this.state.get("textarea"); 

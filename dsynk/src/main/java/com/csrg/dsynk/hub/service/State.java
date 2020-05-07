@@ -1,17 +1,19 @@
 package com.csrg.dsynk.hub.service;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 @Getter
+@ToString
 public class State {
 
     private Map<String, Integer> integerMap = new HashMap<>();
     private Map<String, String> stringMap = new HashMap<>();
-    private Map<String, TreeMap<Double,String>> docMap = new HashMap<>();
+    private Map<String, Map<Double,String>> docMap = new HashMap<>();
 
     public void initialize(String from, StateDefinition definition) {
 
@@ -24,7 +26,7 @@ public class State {
                 stringMap.put(variable.name, variable.value);
             }
             else if(DataType.doc.equals(variable.type)) {
-                docMap.put(variable.name, new TreeMap<>());
+                docMap.put(variable.name, new HashMap<>());
                 docMap.get(variable.name).put(0.0, variable.value);
             }
         }
@@ -51,7 +53,7 @@ public class State {
         if(message.delValue == "DELETE")
         {
             if(docMap.containsKey(message.key) && docMap.get(message.key).containsKey(message.line))
-            docMap.get(message.key).remove(message.line);
+                docMap.get(message.key).remove(message.line);
         }
         else
         {
