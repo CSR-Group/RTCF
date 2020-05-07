@@ -11,4 +11,5 @@ public class RequestMessage
     String key;
     String value;
     Double line;
+    String delValue;
 }

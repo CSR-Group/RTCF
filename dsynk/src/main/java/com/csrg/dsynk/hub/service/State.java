@@ -13,7 +13,7 @@ public class State {
     private Map<String, String> stringMap = new HashMap<>();
     private Map<String, TreeMap<Double,String>> docMap = new HashMap<>();
 
-    public void intialize(String from, StateDefinition definition) {
+    public void initialize(String from, StateDefinition definition) {
 
         for(Variable variable : definition.getVariables()) {
 
@@ -46,9 +46,17 @@ public class State {
         }
     }
 
-    private void handleDocumentChange(RequestMessage message) {
-
-        docMap.putIfAbsent(message.key, new TreeMap<>());
-        docMap.get(message.key).put(message.line,message.value);
+    private void handleDocumentChange(RequestMessage message)
+    {
+        if(message.delValue == "DELETE")
+        {
+            if(docMap.containsKey(message.key) && docMap.get(message.key).containsKey(message.line))
+            docMap.get(message.key).remove(message.line);
+        }
+        else
+        {
+            docMap.putIfAbsent(message.key, new TreeMap<>());
+            docMap.get(message.key).put(message.line,message.value);
+        }
     }
 }

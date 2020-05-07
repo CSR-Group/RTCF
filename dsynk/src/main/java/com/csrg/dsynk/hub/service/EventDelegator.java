@@ -30,7 +30,7 @@ public class EventDelegator {
         executorServiceMap.computeIfAbsent(topic, k -> Executors.newSingleThreadExecutor());
         executorServiceMap.get(topic).submit(() -> {
             stateMap.computeIfAbsent(topic, k -> new State());
-            stateMap.get(topic).intialize(from, definition);
+            stateMap.get(topic).initialize(from, definition);
         });
 
     }

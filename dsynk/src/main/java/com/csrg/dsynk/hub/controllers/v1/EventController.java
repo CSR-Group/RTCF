@@ -57,6 +57,4 @@ public class EventController {
         StateDto stateDto = new StateDto(state);
         messagingTemplate.convertAndSend(TOPIC + getStateDto.getClientid(), stateDto);
     }
-
-
 }

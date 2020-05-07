@@ -10,12 +10,13 @@ public class MessageDto
     DataType type;
     String key;
     String value;
+    String delValue;
 
     // specific to document
     Double line;
 
     public RequestMessage asRequestMessage() {
 
-        return new RequestMessage(this.type, this.key, this.value, this.line);
+        return new RequestMessage(this.type, this.key, this.value, this.line, this.delValue);
     }
 }
