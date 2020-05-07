@@ -11,7 +11,7 @@ public class StateDto {
 
     private Map<String, Integer> integers;
     private Map<String, String> strings;
-    private Map<String, TreeMap<Integer,String>> docs;
+    private Map<String, TreeMap<Double,String>> docs;
 
     public StateDto(State state) {
 

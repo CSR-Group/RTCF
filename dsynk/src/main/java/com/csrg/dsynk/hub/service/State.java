@@ -11,7 +11,7 @@ public class State {
 
     private Map<String, Integer> integerMap = new HashMap<>();
     private Map<String, String> stringMap = new HashMap<>();
-    private Map<String, TreeMap<Integer,String>> docMap = new HashMap<>();
+    private Map<String, TreeMap<Double,String>> docMap = new HashMap<>();
 
     public void intialize(String from, StateDefinition definition) {
 
@@ -25,7 +25,7 @@ public class State {
             }
             else if(DataType.doc.equals(variable.type)) {
                 docMap.put(variable.name, new TreeMap<>());
-                docMap.get(variable.name).put(0, variable.value);
+                docMap.get(variable.name).put(0.0, variable.value);
             }
         }
     }

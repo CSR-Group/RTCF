@@ -22,19 +22,19 @@ class App extends React.Component {
 
   createNewSession() {
 
-    console.log("Creating new session");
+    //console.log("Creating new session");
 
     createReplicatedObject("dsynk.io:9090",          
     {
         "document": {"type": "str", "value":"Hello world"}, 
-        "textarea": {"type": "doc", "value":"Hello world 2"}
+        "textarea": {"type": "doc", "value":"Hello world"}
     }, () => this.handleStateChange(this))
     .then(session => {
       this.setState(state => ({
         'object': session[0],
         'sessionid' : session[1] 
       }));
-      console.log("Replicated Object Created" + session);
+      //console.log("Replicated Object Created" + session);
     }); 
   }
 
@@ -50,7 +50,7 @@ class App extends React.Component {
 
   render() {
 
-    console.log("render called on app");
+    //console.log("render called on app");
 
     if(this.state.sessionid == undefined) {
       return (

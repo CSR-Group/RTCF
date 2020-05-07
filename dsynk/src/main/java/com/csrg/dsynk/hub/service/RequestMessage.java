@@ -10,5 +10,5 @@ public class RequestMessage
     DataType type;
     String key;
     String value;
-    Integer line;
+    Double line;
 }

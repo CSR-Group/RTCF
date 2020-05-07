@@ -12,7 +12,7 @@ public class MessageDto
     String value;
 
     // specific to document
-    Integer line;
+    Double line;
 
     public RequestMessage asRequestMessage() {
 
