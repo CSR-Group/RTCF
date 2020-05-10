@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/RTCF/static/css/main.a21ab84c.chunk.css",
+    "main.js": "/RTCF/static/js/main.394dd44e.chunk.js",
+    "main.js.map": "/RTCF/static/js/main.394dd44e.chunk.js.map",
+    "runtime-main.js": "/RTCF/static/js/runtime-main.a8979694.js",
+    "runtime-main.js.map": "/RTCF/static/js/runtime-main.a8979694.js.map",
+    "static/css/2.2af0fce4.chunk.css": "/RTCF/static/css/2.2af0fce4.chunk.css",
+    "static/js/2.1b681547.chunk.js": "/RTCF/static/js/2.1b681547.chunk.js",
+    "static/js/2.1b681547.chunk.js.map": "/RTCF/static/js/2.1b681547.chunk.js.map",
+    "index.html": "/RTCF/index.html",
+    "precache-manifest.8f27be70a6c5e91f5a813d570f4df262.js": "/RTCF/precache-manifest.8f27be70a6c5e91f5a813d570f4df262.js",
+    "service-worker.js": "/RTCF/service-worker.js",
+    "static/css/2.2af0fce4.chunk.css.map": "/RTCF/static/css/2.2af0fce4.chunk.css.map",
+    "static/css/main.a21ab84c.chunk.css.map": "/RTCF/static/css/main.a21ab84c.chunk.css.map",
+    "static/js/2.1b681547.chunk.js.LICENSE.txt": "/RTCF/static/js/2.1b681547.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/RTCF/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a8979694.js",
+    "static/css/2.2af0fce4.chunk.css",
+    "static/js/2.1b681547.chunk.js",
+    "static/css/main.a21ab84c.chunk.css",
+    "static/js/main.394dd44e.chunk.js"
+  ]
+}
