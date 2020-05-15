@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
+</style>
+</head>
+<body>
+<script src="dsynk.js"></script>
+<script>
+
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+var playerName = uuidv4();
+var playerNameX = playerName + "X";
+var playerNameY = playerName + "Y";
+var myGamePiece;
+var otherPlayers = [];
+var state;
+
+function handleStateChange(stateObj) {
+  // state is changed
+  // console.log("statechange",stateObj);
+  // state = stateObj;
+}
+function handleEvent(event) {
+  // state is changed
+  console.log(event);
+  state = event[0]
+  document.getElementById("sessIDp").innerHTML = event[1];
+}
+
+function handleJoinSession(stateObj) {
+  // state is changed
+  console.log(stateObj);
+  state = stateObj;
+}
+
+function createSession() {
+  var obj = {}
+  obj[playerNameX] = {"type": "int64", "value":"30"}
+  obj[playerNameY] = {"type": "int64", "value":"30"}
+
+  dsynk.createReplicatedObject("dsynkmanager.eastus.azurecontainer.io:9090",          
+    obj, () => handleStateChange())
+    .then(session => handleEvent(session));
+  startGame();
+}
+
+function joinSession() {
+  var sessionId = document.getElementById("sessionText").value;
+  dsynk.getReplicatedObject("dsynkmanager.eastus.azurecontainer.io:9090", sessionId, () => handleStateChange())
+  .then(session => handleJoinSession(session));
+  startGame();
+}
+
+function startGame() {
+
+    myGamePiece = new component(30, 30, "red", 10, 120);
+    myGamePiece.gravity = 0.05;
+    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 1000;
+        this.canvas.height = 600;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function component(width, height, color, x, y, type) {
+    this.type = type;
+    this.score = 0;
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    this.gravity = 0;
+    this.gravitySpeed = 0;
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (this.type == "text") {
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        if(state!= undefined) {
+          var players = state.getIntParams();
+          const keys = Object.keys(players);
+          keys.forEach((key, index, array) => {
+            if(key!= playerNameX && key.endsWith("X")) {
+              var nkx = key;
+              var nky = key.substring(0, key.length - 1) + "Y";
+
+              var nx = state.get(nkx);
+              var ny = state.get(nky);
+              
+              ctx.fillStyle = "blue";
+              ctx.fillRect(nx, ny, this.width, this.height);
+            }
+          });
+        }
+    }
+    this.goUp = function() {
+      console.log(state);
+      state.set(playerNameY, this.y - 5);
+      this.y = this.y - 5;
+    }
+    this.goRight = function() {
+      state.set(playerNameX, this.x + 5);
+      this.x = this.x + 5;
+    }
+    this.goDown = function() {
+      state.set(playerNameY, this.y + 5);
+      this.y = this.y + 5;
+    }
+    this.goLeft = function() {
+      state.set(playerNameX, this.x - 5);
+      this.x = this.x - 5;
+    }
+}
+
+function updateGameArea() {
+    var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+    myGameArea.clear();
+    myGamePiece.update();
+}
+
+document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '38') {
+        // up arrow
+        myGamePiece.goUp();
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+        myGamePiece.goDown();
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+       myGamePiece.goLeft();
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+       myGamePiece.goRight();
+    }
+
+}
+
+</script>
+<br>
+<button onmousedown="createSession()" >create session</button>
+<input id ="sessionText" type="text"/>
+<button onmousedown="joinSession()" >join session</button>
+<p id="sessIDp">Session Not Created</p>
+</body>
